@@ -6,7 +6,7 @@ function convertToMontlyReturnRate(yearlyReturnRate) {
 }
 
 // Função responsavel de gerar uma lista com o retorno do rendimento dos investimentos
-function generateReturnsArray(
+export function generateReturnsArray(
   startingAmount = 0, // investimento inicial
   timeHorizon = 0, // numero do periodo
   timePeriod = 'monthly', // Anual ou mensal
@@ -40,7 +40,12 @@ function generateReturnsArray(
 
   // O array irá armazenar inicialmente o primeiro objeto
   const returnsArray = [referenceInvestmentObject];
-  for (let timeReference; timeReference <= finalTimeHorizon; timeReference++) {
+
+  for (
+    let timeReference = 1;
+    timeReference <= finalTimeHorizon;
+    timeReference++
+  ) {
     // pega o valor do ultimo objeto criado no array * a taxa convertida + valor de aporte ao termino de cada iteração
     const totalAmount =
       returnsArray[timeReference - 1].totalAmount * finalReturnRate +
