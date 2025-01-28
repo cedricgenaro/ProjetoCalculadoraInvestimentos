@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Diretriz - define uma classe que quando tal elemento receber a classe error,  irá automaticamente aplicar essas três classes do TailWind */
+@layer utilities {
+  .error {
+    @apply border-2;
+    @apply border-red-600;
+    @apply rounded-lg;
+  }
+}
