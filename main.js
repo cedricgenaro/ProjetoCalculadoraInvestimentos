@@ -1,9 +1,13 @@
 import { generateReturnsArray } from './src/investmentGoals.js';
+// Importando a bibliotca Charts
+import { Chart } from 'chart.js/auto';
 
 // const calculateButton = document.getElementById('calculate-results');
 const form = document.getElementById('investment-form');
 const clearFormButton = document.getElementById('clear-form');
-
+// Selecionando os canvas dos gráficos
+const finalMoneyChart = document.getElementById('final-money-distribution');
+const progressionChart = document.getElementById('progression');
 // Função que irá calcular e gerar todos os gráficos e tabelas
 
 function renderProgressions(evt) {
@@ -37,7 +41,24 @@ function renderProgressions(evt) {
     returnRatePeriod
   );
 
-  console.log(returnsArray);
+  new Chart(finalMoneyChart, {
+    type: 'doughnut',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow'],
+      datasets: [
+        {
+          label: 'My First Dataset',
+          data: [300, 50, 100],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+          ],
+          hoverOffset: 4,
+        },
+      ],
+    },
+  });
 }
 
 function clearForm() {
