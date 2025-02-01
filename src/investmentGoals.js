@@ -52,7 +52,8 @@ export function generateReturnsArray(
       monthlyContribution;
     // Quanto rendeu no mes atual da iteração - pegou o valor total que tinha no mês passado * a taxa de rendimento
     const interestReturns =
-      returnsArray[timeReference - 1].totalAmount * finalReturnRate;
+      returnsArray[timeReference - 1].totalAmount * (finalReturnRate - 1);
+    // Obs: finalReturnRate = 1,05 - mas a nossa taxa é de 0,05  - para que a operação fique correta temos que subtrair 1
     // Quanto que já investi - quantia inicial + aporte do mês * a quantidade de meses que se passaram
     const investedAmount = startingAmount + monthlyContribution * timeReference;
     // Total de rendimento do primeiro mês ao atual - pegando o valor total que tenho mais os rendimentos - o total já investido
