@@ -49,18 +49,21 @@ function renderProgressions(evt) {
 
   const finalInvestmentObject = returnsArray[returnsArray.length - 1]; // Exibe o ultimo objeto adicionado na lista
 
-  new Chart(finalMoneyChart, {
+  const doughnutChartReference = new Chart(finalMoneyChart, {
     type: 'doughnut',
     data: {
       labels: ['Total Investido', 'Rendimento', 'Imposto'],
       datasets: [
         {
           data: [
+            // QUANTO INVESTIMOS
             formatCurrency(finalInvestmentObject.investedAmount),
             formatCurrency(
+              // Aqui entra o resultado da operação: o quanto o investimento RENDEU
               finalInvestmentObject.totalInterestReturns * (1 - taxRate / 100)
             ),
             formatCurrency(
+              //QUANTO PAGAMOS DE IMPOSTO
               finalInvestmentObject.totalInterestReturns * (taxRate / 100)
             ),
           ],
@@ -74,7 +77,49 @@ function renderProgressions(evt) {
       ],
     },
   });
+
+  // Segundo gráfico
+  const progressionChartReference = new Chart(progressionChart, {
+    type: 'bar', // Tipo barra
+    data: {
+      // Rótulos do eixo x
+      labels: returnsArray.map((investmentObject) => investmentObject.month),
+      // Configuração das barras
+      datasets: [
+        {
+          // Primeira barra
+          label: 'Total Investido',
+          // data recebe um array resultado do map
+          data: returnsArray.map((investmentObject) =>
+            formatCurrency(investmentObject.investedAmount)
+          ),
+          backgroundColor: 'rgb(255, 99, 132)',
+        },
+        {
+          //Segunda barra
+          label: 'Retorno do Investimento',
+          data: returnsArray.map((investmentObject) =>
+            formatCurrency(investmentObject.interestReturns)
+          ),
+          backgroundColor: 'rgb(54, 162, 235)',
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          stacked: true,
+        },
+        y: {
+          stacked: true,
+        },
+      },
+    },
+  });
 }
+
+function resetCharts() {}
 
 function clearForm() {
   form['starting-amount'].value = '';
