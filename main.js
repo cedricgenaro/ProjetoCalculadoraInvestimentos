@@ -204,6 +204,6 @@ for (const formElement of form) {
     formElement.addEventListener('blur', validateInput);
   }
 }
-form.addEventListener('submit', renderProgressions);
+// form.addEventListener('submit', renderProgressions);
 clearFormButton.addEventListener('click', clearForm);
 // calculateButton.addEventListener('click', renderProgressions);
