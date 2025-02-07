@@ -8,6 +8,9 @@ const clearFormButton = document.getElementById('clear-form');
 // Selecionando os canvas dos gráficos
 const finalMoneyChart = document.getElementById('final-money-distribution');
 const progressionChart = document.getElementById('progression');
+// Variaveis que iram receber os gráficos
+let doughnutChartReference = {};
+let progressChartReference = {};
 
 // Função que formata os valores numéricos para o formato de moeda
 function formatCurrency(value) {
@@ -22,6 +25,9 @@ function renderProgressions(evt) {
   if (document.querySelector('.error')) {
     return;
   }
+
+  // Logo antes de renderizar os resultados, resetamos os gráficos
+  resetCharts();
   const startingAmount = Number(
     form['starting-amount'].value.replace(',', '.')
   );
@@ -49,7 +55,7 @@ function renderProgressions(evt) {
 
   const finalInvestmentObject = returnsArray[returnsArray.length - 1]; // Exibe o ultimo objeto adicionado na lista
 
-  const doughnutChartReference = new Chart(finalMoneyChart, {
+  doughnutChartReference = new Chart(finalMoneyChart, {
     type: 'doughnut',
     data: {
       labels: ['Total Investido', 'Rendimento', 'Imposto'],
@@ -72,14 +78,14 @@ function renderProgressions(evt) {
             'rgb(54, 162, 235)',
             'rgb(255, 205, 86)',
           ],
-          hoverOffset: 40,
+          hoverOffset: 5,
         },
       ],
     },
   });
 
   // Segundo gráfico
-  const progressionChartReference = new Chart(progressionChart, {
+  progressChartReference = new Chart(progressionChart, {
     type: 'bar', // Tipo barra
     data: {
       // Rótulos do eixo x
@@ -119,7 +125,21 @@ function renderProgressions(evt) {
   });
 }
 
-function resetCharts() {}
+// Função que verifica se o objeto está vazio
+function isObjectEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
+// FUNÇÃO PARA RESETAR OS GRÁFICOS
+function resetCharts() {
+  if (
+    !isObjectEmpty(doughnutChartReference) &&
+    !isObjectEmpty(progressChartReference)
+  ) {
+    doughnutChartReference.destroy();
+    progressChartReference.destroy();
+  }
+}
 
 function clearForm() {
   form['starting-amount'].value = '';
@@ -127,7 +147,7 @@ function clearForm() {
   form['time-amount'].value = '';
   form['return-rate'].value = '';
   form['tax-rate'].value = '';
-
+  resetCharts();
   const errorInputsContainers = document.querySelectorAll('.error');
 
   for (const errorInputsContainer of errorInputsContainers) {
