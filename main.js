@@ -12,6 +12,15 @@ const progressionChart = document.getElementById('progression');
 let doughnutChartReference = {};
 let progressChartReference = {};
 
+// Objeto necessário para a inteligencia da nossa tabela
+const columnsArray = [
+  { columnLabel: 'Total investido', accessor: 'investedAmount' },
+  { columnLabel: 'Rendimento mensal', accessor: 'interestReturns' },
+  { columnLabel: 'Rendimento total', accessor: 'totalInterestReturns' },
+  { columnLabel: 'Mês', accessor: 'month' },
+  { columnLabel: 'Quantia Total', accessor: 'totalAmount' },
+];
+
 // Função que formata os valores numéricos para o formato de moeda
 function formatCurrency(value) {
   return value.toFixed(2);
