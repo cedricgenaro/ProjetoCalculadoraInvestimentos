@@ -1,6 +1,8 @@
 import { generateReturnsArray } from './src/investmentGoals.js';
 // Importando a bibliotca Charts
 import { Chart } from 'chart.js/auto';
+// iMPORTANDO A FUNCIONALIDADE DE GERAR TABELA
+import { createTable } from './src/table.js';
 
 // const calculateButton = document.getElementById('calculate-results');
 const form = document.getElementById('investment-form');
@@ -14,16 +16,32 @@ let progressChartReference = {};
 
 // Objeto necessário para a inteligencia da nossa tabela
 const columnsArray = [
-  { columnLabel: 'Total investido', accessor: 'investedAmount' },
-  { columnLabel: 'Rendimento mensal', accessor: 'interestReturns' },
-  { columnLabel: 'Rendimento total', accessor: 'totalInterestReturns' },
   { columnLabel: 'Mês', accessor: 'month' },
-  { columnLabel: 'Quantia Total', accessor: 'totalAmount' },
+  {
+    columnLabel: 'Total investido',
+    accessor: 'investedAmount',
+    format: (numberInfo) => formatCurrency(numberInfo),
+  },
+  {
+    columnLabel: 'Rendimento mensal',
+    accessor: 'interestReturns',
+    format: (numberInfo) => formatCurrency(numberInfo),
+  },
+  {
+    columnLabel: 'Rendimento total',
+    accessor: 'totalInterestReturns',
+    format: (numberInfo) => formatCurrency(numberInfo),
+  },
+  {
+    columnLabel: 'Quantia Total',
+    accessor: 'totalAmount',
+    format: (numberInfo) => formatCurrency(numberInfo),
+  },
 ];
 
 // Função que formata os valores numéricos para o formato de moeda
 function formatCurrency(value) {
-  return value.toFixed(2);
+  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
 // Função que irá calcular e gerar todos os gráficos e tabelas
@@ -62,76 +80,78 @@ function renderProgressions(evt) {
     returnRatePeriod
   );
 
-  const finalInvestmentObject = returnsArray[returnsArray.length - 1]; // Exibe o ultimo objeto adicionado na lista
+  // PARTE DOS GRÁFICOS
+  //const finalInvestmentObject = returnsArray[returnsArray.length - 1]; // Exibe o ultimo objeto adicionado na lista
 
-  doughnutChartReference = new Chart(finalMoneyChart, {
-    type: 'doughnut',
-    data: {
-      labels: ['Total Investido', 'Rendimento', 'Imposto'],
-      datasets: [
-        {
-          data: [
-            // QUANTO INVESTIMOS
-            formatCurrency(finalInvestmentObject.investedAmount),
-            formatCurrency(
-              // Aqui entra o resultado da operação: o quanto o investimento RENDEU
-              finalInvestmentObject.totalInterestReturns * (1 - taxRate / 100)
-            ),
-            formatCurrency(
-              //QUANTO PAGAMOS DE IMPOSTO
-              finalInvestmentObject.totalInterestReturns * (taxRate / 100)
-            ),
-          ],
-          backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)',
-          ],
-          hoverOffset: 5,
-        },
-      ],
-    },
-  });
+  // doughnutChartReference = new Chart(finalMoneyChart, {
+  //   type: 'doughnut',
+  //   data: {
+  //     labels: ['Total Investido', 'Rendimento', 'Imposto'],
+  //     datasets: [
+  //       {
+  //         data: [
+  //           // QUANTO INVESTIMOS
+  //           formatCurrency(finalInvestmentObject.investedAmount),
+  //           formatCurrency(
+  //             // Aqui entra o resultado da operação: o quanto o investimento RENDEU
+  //             finalInvestmentObject.totalInterestReturns * (1 - taxRate / 100)
+  //           ),
+  //           formatCurrency(
+  //             //QUANTO PAGAMOS DE IMPOSTO
+  //             finalInvestmentObject.totalInterestReturns * (taxRate / 100)
+  //           ),
+  //         ],
+  //         backgroundColor: [
+  //           'rgb(255, 99, 132)',
+  //           'rgb(54, 162, 235)',
+  //           'rgb(255, 205, 86)',
+  //         ],
+  //         hoverOffset: 5,
+  //       },
+  //     ],
+  //   },
+  // });
 
-  // Segundo gráfico
-  progressChartReference = new Chart(progressionChart, {
-    type: 'bar', // Tipo barra
-    data: {
-      // Rótulos do eixo x
-      labels: returnsArray.map((investmentObject) => investmentObject.month),
-      // Configuração das barras
-      datasets: [
-        {
-          // Primeira barra
-          label: 'Total Investido',
-          // data recebe um array resultado do map
-          data: returnsArray.map((investmentObject) =>
-            formatCurrency(investmentObject.investedAmount)
-          ),
-          backgroundColor: 'rgb(255, 99, 132)',
-        },
-        {
-          //Segunda barra
-          label: 'Retorno do Investimento',
-          data: returnsArray.map((investmentObject) =>
-            formatCurrency(investmentObject.interestReturns)
-          ),
-          backgroundColor: 'rgb(54, 162, 235)',
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      scales: {
-        x: {
-          stacked: true,
-        },
-        y: {
-          stacked: true,
-        },
-      },
-    },
-  });
+  // // Segundo gráfico
+  // progressChartReference = new Chart(progressionChart, {
+  //   type: 'bar', // Tipo barra
+  //   data: {
+  //     // Rótulos do eixo x
+  //     labels: returnsArray.map((investmentObject) => investmentObject.month),
+  //     // Configuração das barras
+  //     datasets: [
+  //       {
+  //         // Primeira barra
+  //         label: 'Total Investido',
+  //         // data recebe um array resultado do map
+  //         data: returnsArray.map((investmentObject) =>
+  //           formatCurrency(investmentObject.investedAmount)
+  //         ),
+  //         backgroundColor: 'rgb(255, 99, 132)',
+  //       },
+  //       {
+  //         //Segunda barra
+  //         label: 'Retorno do Investimento',
+  //         data: returnsArray.map((investmentObject) =>
+  //           formatCurrency(investmentObject.interestReturns)
+  //         ),
+  //         backgroundColor: 'rgb(54, 162, 235)',
+  //       },
+  //     ],
+  //   },
+  //   options: {
+  //     responsive: true,
+  //     scales: {
+  //       x: {
+  //         stacked: true,
+  //       },
+  //       y: {
+  //         stacked: true,
+  //       },
+  //     },
+  //   },
+  // });
+  createTable(columnsArray, returnsArray, 'results-table');
 }
 
 // Função que verifica se o objeto está vazio
@@ -213,6 +233,6 @@ for (const formElement of form) {
     formElement.addEventListener('blur', validateInput);
   }
 }
-// form.addEventListener('submit', renderProgressions);
+form.addEventListener('submit', renderProgressions);
 clearFormButton.addEventListener('click', clearForm);
 // calculateButton.addEventListener('click', renderProgressions);

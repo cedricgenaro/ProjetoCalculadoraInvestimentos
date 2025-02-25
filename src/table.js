@@ -3,7 +3,7 @@ const isNonEmptyArray = (arrayElement) => {
   return Array.isArray(arrayElement) || arrayElement.length > 0;
 };
 
-const createTable = (columnsArray, dataArray, tableId) => {
+export const createTable = (columnsArray, dataArray, tableId) => {
   // Passamos os elementos Array como parametro para verificar se é um array e se não está vazio.
   // Como a função retorna false para é um array ou para tamanho > 0, temos que usar o operador de inversão
   if (
@@ -24,7 +24,7 @@ const createTable = (columnsArray, dataArray, tableId) => {
   }
 
   createTableHeader(tableElement, columnsArray);
-  createTableBody();
+  createTableBody(tableElement, dataArray, columnsArray);
 };
 
 // Função responsável por gerar o cabeçalho da tabela de forma dinamica
@@ -51,4 +51,28 @@ function createTableHeader(tableReference, columnsArray) {
   // <tr><th class='text-center'>NomeDaColuna</th><th class='text-center'>NomeDaColuna</th></tr>
   tableHeaderReference.appendChild(headerRow);
 }
-function createTableBody() {}
+function createTableBody(tableReference, tableItems, columnsArray) {
+  // FUNÇÃO ACESSORA QUE GERA A TAG TBODY
+  function createTbodyElement(tableReference) {
+    const tbody = document.createElement('tbody');
+    return tableReference.appendChild(tbody);
+  }
+
+  // A VARIAVEL RECEBE DOIS VALORES PARA CASO O PRIMEIRO SEJA FALSO RECEBE O SEGUNDO
+  const tableBodyReference =
+    tableReference.querySelector('tbody') ?? createTbodyElement(tableReference);
+
+  // Laço abaixo cria as linhas
+  for (const [itemIndex, tableItem] of tableItems.entries()) {
+    const tableRow = document.createElement('tr');
+
+    // Agora que temos a linha, temos que colocar cada um dos dados em suas respectivas colunas
+    for (const tableColumn of columnsArray) {
+      const formatFn = tableColumn.format ?? ((info) => info);
+      tableRow.innerHTML += /*html*/ `<td class='text-center'>${formatFn(
+        tableItem[tableColumn.accessor]
+      )}</td>`;
+    }
+    tableBodyReference.appendChild(tableRow);
+  }
+}
