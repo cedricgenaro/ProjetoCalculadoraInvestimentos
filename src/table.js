@@ -44,6 +44,9 @@ function createTableHeader(tableReference, columnsArray) {
     tableReference.querySelector('thead') ?? createTheadElement(tableReference);
   // <table><thead></thead></table>
   const headerRow = document.createElement('tr'); // <tr></tr>
+  ['bg-blue-900', 'text-slate-200', 'sticky', 'top-0'].forEach((cssClass) =>
+    headerRow.classList.add(cssClass)
+  );
   for (const tableColumnObject of columnsArray) {
     const headerElement = /*html*/ `<th class='text-center'>${tableColumnObject.columnLabel}</th>`;
     headerRow.innerHTML += headerElement;
@@ -64,10 +67,16 @@ function createTableBody(tableReference, tableItems, columnsArray) {
 
   // Laço abaixo cria as linhas
   for (const [itemIndex, tableItem] of tableItems.entries()) {
+    //
     const tableRow = document.createElement('tr');
+    // FORMATAMOS AS CORES ALTERNADAS
+    if (itemIndex % 2 !== 0) {
+      tableRow.classList.add('bg-blue-200');
+    }
 
     // Agora que temos a linha, temos que colocar cada um dos dados em suas respectivas colunas
     for (const tableColumn of columnsArray) {
+      // a VARIAVEL formatFn recebe a função que vem lá da main, com isso conseguimos estar utilizando no arquivo table
       const formatFn = tableColumn.format ?? ((info) => info);
       tableRow.innerHTML += /*html*/ `<td class='text-center'>${formatFn(
         tableItem[tableColumn.accessor]
